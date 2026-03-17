@@ -296,10 +296,91 @@
     .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.5s ease, transform 0.5s ease; }
     .reveal.show { opacity: 1; transform: none; }
 
+    /* HAMBURGER BUTTON */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      cursor: pointer;
+      padding: 0;
+      transition: border-color 0.2s, background 0.3s;
+      flex-shrink: 0;
+    }
+    .hamburger:hover { border-color: var(--subtle); }
+    .hamburger span {
+      display: block;
+      width: 16px;
+      height: 1.5px;
+      background: var(--muted);
+      border-radius: 2px;
+      transition: transform 0.25s ease, opacity 0.2s ease, background 0.3s;
+      transform-origin: center;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* MOBILE DROPDOWN */
+    .nav-mobile {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0; right: 0;
+      background: var(--nav-bg);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 98;
+      padding: 0.5rem 0;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .nav-mobile.open { display: block; }
+    .nav-mobile a {
+      display: block;
+      padding: 0.85rem 6vw;
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s, background 0.2s;
+    }
+    .nav-mobile a:last-child { border-bottom: none; }
+    .nav-mobile a:hover { color: var(--text); background: var(--surface); }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 6px;
+      font-size: 0.73rem;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      text-decoration: none;
+      transition: color 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .back-to-top:hover {
+      color: var(--text);
+      border-color: var(--subtle);
+      transform: translateY(-2px);
+    }
+
     /* RESPONSIVE */
     @media (max-width: 700px) {
       .about-layout { grid-template-columns: 1fr; gap: 2.5rem; }
       .nav-center { display: none; }
+      .hamburger { display: flex; }
       h1 { font-size: clamp(3rem, 14vw, 5rem); }
       .qa-images.two-col { grid-template-columns: 1fr; }
     }
@@ -317,8 +398,19 @@
   <div class="nav-right">
     <span class="badge"><span class="badge-dot"></span>Data Analyst</span>
     <button class="theme-btn" id="themeToggle" title="Toggle theme">☀</button>
+    <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE NAV DROPDOWN -->
+<div class="nav-mobile" id="navMobile">
+  <a href="https://portofolio-rizaladitiyosupendi.netlify.app/" onclick="closeMobileNav()">Home</a>
+  <a href="#dataset"  onclick="closeMobileNav()">Dataset</a>
+  <a href="#analisis" onclick="closeMobileNav()">Analisis</a>
+  <a href="#contact"  onclick="closeMobileNav()">Kontak</a>
+</div>
 
 <!-- HERO -->
 <section id="home">
@@ -470,10 +562,32 @@
 
 <footer>
   <span>© 2025 Rizal Aditiyo Supendi</span>
+  <a href="#home" class="back-to-top">↑ Back to top</a>
   <span>Portofolio BOS Kemdikbud 2025</span>
 </footer>
 
 <script>
+  // HAMBURGER MENU
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const navMobile    = document.getElementById('navMobile');
+
+  hamburgerBtn.addEventListener('click', () => {
+    hamburgerBtn.classList.toggle('open');
+    navMobile.classList.toggle('open');
+  });
+
+  function closeMobileNav() {
+    hamburgerBtn.classList.remove('open');
+    navMobile.classList.remove('open');
+  }
+
+  // Close when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!hamburgerBtn.contains(e.target) && !navMobile.contains(e.target)) {
+      closeMobileNav();
+    }
+  });
+
   // Theme toggle
   const root = document.documentElement;
   const btn  = document.getElementById('themeToggle');
